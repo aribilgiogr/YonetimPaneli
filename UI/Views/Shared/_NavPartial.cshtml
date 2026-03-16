@@ -1,4 +1,5 @@
-﻿<!-- Navbar -->
+﻿@using Microsoft.AspNet.Identity
+<!-- Navbar -->
 
 <nav class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme"
      id="layout-navbar">
@@ -49,7 +50,7 @@
                                     </div>
                                 </div>
                                 <div class="flex-grow-1">
-                                    <span class="fw-semibold d-block">John Doe</span>
+                                    <span class="fw-semibold d-block">@User.Identity.GetUserName()</span>
                                     <small class="text-muted">Admin</small>
                                 </div>
                             </div>
@@ -59,13 +60,7 @@
                         <div class="dropdown-divider"></div>
                     </li>
                     <li>
-                        <a class="dropdown-item" href="#">
-                            <i class="bx bx-user me-2"></i>
-                            <span class="align-middle">My Profile</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" href="#">
+                        <a class="dropdown-item" href="@Url.Action("index","manage")">
                             <i class="bx bx-cog me-2"></i>
                             <span class="align-middle">Settings</span>
                         </a>
@@ -83,10 +78,14 @@
                         <div class="dropdown-divider"></div>
                     </li>
                     <li>
-                        <a class="dropdown-item" href="auth-login-basic.html">
-                            <i class="bx bx-power-off me-2"></i>
-                            <span class="align-middle">Log Out</span>
-                        </a>
+                        @using (Html.BeginForm("logoff", "account", FormMethod.Post))
+                        {
+                            @Html.AntiForgeryToken()
+                            <button class="dropdown-item" type="submit">
+                                <i class="bx bx-power-off me-2"></i>
+                                <span class="align-middle">Log Out</span>
+                            </button>
+                        }
                     </li>
                 </ul>
             </li>
