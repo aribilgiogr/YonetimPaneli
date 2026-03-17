@@ -65,6 +65,7 @@
     <Compile Include="Concrete\DTOs\NewPostDto.cs" />
     <Compile Include="Concrete\DTOs\PostDetailDto.cs" />
     <Compile Include="Concrete\DTOs\PostListItemDto.cs" />
+    <Compile Include="Concrete\DTOs\UpdatePostDto.cs" />
     <Compile Include="Concrete\Entities\ApplicationUser.cs" />
     <Compile Include="Concrete\Entities\Post.cs" />
     <Compile Include="Concrete\Entities\Tag.cs" />

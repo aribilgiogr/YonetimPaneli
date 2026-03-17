@@ -1,8 +1,10 @@
 ﻿using Core.Abstracts;
 using Core.Abstracts.IServices;
 using Core.Concrete.DTOs;
+using Core.Concrete.Entities;
 using Data;
 using Data.Contexts;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -15,6 +17,34 @@ namespace Business.Services
         public PostService()
         {
             unitOfWork = new UnitOfWork(context);
+        }
+
+        public void CreatePost(NewPostDto newPost)
+        {
+            var post = new Post
+            {
+                AuthorId = newPost.AuthorId,
+                Content = newPost.Content,
+                CoverImageUrl = newPost.CoverImageUrl,
+                Title = newPost.Title,
+                PublishDate = DateTime.Now,
+                Active = false
+            };
+            unitOfWork.PostRepository.Create(post);
+            unitOfWork.Commit();
+        }
+
+        public void DeletePost(int id, string authorId)
+        {
+            var post = unitOfWork.PostRepository.ReadById(id);
+            if (post != null && post.AuthorId == authorId)
+            {
+                // Soft Delete: Veri saklanır.
+                post.Active = false;
+                post.Deleted = true;
+                unitOfWork.PostRepository.Update(post);
+                unitOfWork.Commit();
+            }
         }
 
         public PostDetailDto GetPostDetail(int id)
@@ -52,6 +82,21 @@ namespace Business.Services
                        PublishDate = post.PublishDate,
                        Tags = post.Tags.Select(x => x.Name).ToArray()
                    };
+        }
+
+        public void UpdatePost(UpdatePostDto updatedPost)
+        {
+            var post = unitOfWork.PostRepository.ReadById(updatedPost.Id);
+            if (post != null)
+            {
+                post.Title = updatedPost.Title;
+                post.Content = updatedPost.Content;
+                post.CoverImageUrl = updatedPost.CoverImageUrl;
+                post.PublishDate = DateTime.Now;
+                post.Active = !updatedPost.IsDraft;
+                unitOfWork.PostRepository.Update(post);
+                unitOfWork.Commit();
+            }
         }
     }
 }
