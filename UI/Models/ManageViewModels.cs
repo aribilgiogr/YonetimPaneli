@@ -5,6 +5,11 @@ using Microsoft.Owin.Security;
 
 namespace UI.Models
 {
+    public class ProfileViewModel
+    {
+
+    }
+
     public class IndexViewModel
     {
         public bool HasPassword { get; set; }
