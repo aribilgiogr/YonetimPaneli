@@ -7,6 +7,7 @@ namespace Core.Abstracts.IServices
     {
         IEnumerable<PostListItemDto> GetPostList();
         PostDetailDto GetPostDetail(int id);
+        UpdatePostDto GetPostEdit(int id);
 
         void CreatePost(NewPostDto newPost);
         void UpdatePost(UpdatePostDto updatedPost);

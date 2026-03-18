@@ -2,6 +2,7 @@
 using Core.Abstracts.IServices;
 using Core.Concrete.DTOs;
 using Microsoft.AspNet.Identity;
+using System;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -42,14 +43,33 @@ namespace UI.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(NewPostDto model, HttpPostedFileBase file)
+        public ActionResult Create(NewPostDto model, HttpPostedFileBase CoverImage)
         {
-            string[] file_ext = { ".jpg", ".png", ".bmp" };
-            if (file != null && file.ContentLength > 0)
-            {
-                if (file_ext.Contains(Path.GetExtension(file.FileName).ToLower()))
-                {
+            ModelState["CoverImageUrl"].Errors.Clear();
 
+            string[] file_ext = { ".jpg", ".png", ".bmp" };
+            if (CoverImage != null && CoverImage.ContentLength > 0)
+            {
+                if (file_ext.Contains(Path.GetExtension(CoverImage.FileName).ToLower()))
+                {
+                    try
+                    {
+                        string fileName = Guid.NewGuid() + Path.GetExtension(CoverImage.FileName);
+                        string folder = Server.MapPath("~/uploads");
+                        if (!Directory.Exists(folder))
+                        {
+                            Directory.CreateDirectory(folder);
+                        }
+                        string fullPath = Path.Combine(folder, fileName);
+                        CoverImage.SaveAs(fullPath);
+                        model.CoverImageUrl = "/uploads/" + fileName;
+
+                        ModelState.Remove("CoverImageUrl");
+                    }
+                    catch (Exception ex)
+                    {
+                        ModelState.AddModelError("CoverImageUrl", ex.Message);
+                    }
                 }
                 else
                 {
@@ -70,9 +90,15 @@ namespace UI.Controllers
             return View(model);
         }
 
-        public ActionResult Edit(int id)
+        public ActionResult Edit(int? id)
         {
-            var post = service.GetPostDetail(id);
+            if (id == null)
+                return HttpNotFound();
+
+            var post = service.GetPostEdit((int)id);
+            if (post == null)
+                return HttpNotFound();
+
             return View(post);
         }
 
@@ -88,9 +114,16 @@ namespace UI.Controllers
             return View(model);
         }
 
-        public ActionResult Delete(int id)
+        public ActionResult Delete(int? id)
         {
-            var post = service.GetPostDetail(id);
+            if (id == null)
+                return HttpNotFound();
+
+            var post = service.GetPostDetail((int)id);
+
+            if (post == null)
+                return HttpNotFound();
+
             return View(post);
         }
 

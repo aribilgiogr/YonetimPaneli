@@ -292,6 +292,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="uploads\da2cd86c-89fd-4da7-a394-782489781405.jpg" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -332,6 +333,8 @@
     <Content Include="Views\Posts\Index.cshtml" />
     <Content Include="Views\Posts\Details.cshtml" />
     <Content Include="Views\Posts\Create.cshtml" />
+    <Content Include="Views\Posts\Delete.cshtml" />
+    <Content Include="Views\Posts\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
