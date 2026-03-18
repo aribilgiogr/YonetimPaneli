@@ -21,7 +21,7 @@ namespace UI.Controllers
         // GET: Posts
         public ActionResult Index()
         {
-            return View(service.GetPostList());
+            return View(service.GetPostList(User.Identity.GetUserId()));
         }
 
         public ActionResult Details(int? id)
@@ -104,8 +104,38 @@ namespace UI.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, UpdatePostDto model)
+        public ActionResult Edit(int id, UpdatePostDto model, HttpPostedFileBase CoverImage)
         {
+            string[] file_ext = { ".jpg", ".png", ".bmp" };
+            if (CoverImage != null && CoverImage.ContentLength > 0)
+            {
+                if (file_ext.Contains(Path.GetExtension(CoverImage.FileName).ToLower()))
+                {
+                    try
+                    {
+                        string fileName = Guid.NewGuid() + Path.GetExtension(CoverImage.FileName);
+                        string folder = Server.MapPath("~/uploads");
+                        if (!Directory.Exists(folder))
+                        {
+                            Directory.CreateDirectory(folder);
+                        }
+                        string fullPath = Path.Combine(folder, fileName);
+                        CoverImage.SaveAs(fullPath);
+                        model.CoverImageUrl = "/uploads/" + fileName;
+
+                        ModelState.Remove("CoverImageUrl");
+                    }
+                    catch (Exception ex)
+                    {
+                        ModelState.AddModelError("CoverImageUrl", ex.Message);
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError("CoverImageUrl", "Dosya uzantısı geçersiz! (\".jpg\", \".png\", \".bmp\")");
+                }
+            }
+
             if (ModelState.IsValid)
             {
                 service.UpdatePost(model);

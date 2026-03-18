@@ -41,7 +41,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.CoverImageUrl, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.CoverImageUrl, new { htmlAttributes = new { @class = "form-control" } })
+                <input type="file" name="CoverImage" id="CoverImage" />
                 @Html.ValidationMessageFor(model => model.CoverImageUrl, "", new { @class = "text-danger" })
             </div>
         </div>

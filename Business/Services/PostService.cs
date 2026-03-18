@@ -85,9 +85,9 @@ namespace Business.Services
             return null;
         }
 
-        public IEnumerable<PostListItemDto> GetPostList()
+        public IEnumerable<PostListItemDto> GetPostList(string authorId)
         {
-            var posts = unitOfWork.PostRepository.ReadMany(null, "Tags", "Author");
+            var posts = unitOfWork.PostRepository.ReadMany(x => x.AuthorId == authorId, "Tags", "Author");
             return from post in posts
                    select new PostListItemDto
                    {
