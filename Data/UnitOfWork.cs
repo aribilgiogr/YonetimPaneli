@@ -1,5 +1,6 @@
 ﻿using Core.Abstracts;
 using Core.Abstracts.IRepositories;
+using Core.Abstracts.IServices;
 using Data.Contexts;
 using Data.Repositories;
 using System;
@@ -20,6 +21,12 @@ namespace Data
 
         private ITagRepository tagRepository;
         public ITagRepository TagRepository => tagRepository = tagRepository ?? new TagRepository(context);
+
+        private IProjectRepository projectRepository;
+        public IProjectRepository ProjectRepository => projectRepository = projectRepository ?? new ProjectRepository(context);
+
+        private ICategoryRepository categoryRepository;
+        public ICategoryRepository CategoryRepository => categoryRepository = categoryRepository ?? new CategoryRepository(context);
 
         public void Commit()
         {
